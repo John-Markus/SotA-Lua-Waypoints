@@ -9,7 +9,18 @@ local lib_waypoints
 
 local test_course = "[\"316.7,104.0,-124.3\",\"Kai\",\"John さんの家の周りをまわりましょう！\"|\"361.8,103.4,-127.3\"|\"366.3,104.0,-64.4\",\"\",\"この先には秘密の迷路が！？\"|\"321.7,104.3,-59.5\",\"\",\"ここは入口反転型の家\"|\"318.1,104.0,-124.4\",\"\",\"ゴールまであと少しです。\"]"
 
+
+function __(ident, msg)
+  if localizations[ident] then
+    return localizations[ident]
+  end
+    
+  return msg
+end
+
+
 waypoints = {
+  VERSION = "0.9.5",
   enabled = 0,
   visible = 1,
   arrow_size = 40,
@@ -21,6 +32,26 @@ waypoints = {
   alerts = { msg, timeout = 0},  
 }
 
+localizations = {
+  msg_shroud_on_start = "WAYPOINTS.lua loaded version %s",
+  msg_move_map_short = "マップ移動: %s",
+  msg_move_map_long = "マップ %s に移動してください。",
+  msg_guide_completed_short = "案内は終了しました。",  
+  msg_distance_short = "目的地まで %0.1f",
+  msg_next_node_found_long = "次の目的地を設定しました。 %s",
+  msg_next_location_long = "次の目的地： %s",
+  msg_arrived_long = "目的地に到着しました。",
+  msg_command_stop = "目的地のガイドを中断しました。",  
+  msg_no_comment = "周辺に注意して移動しましょう。",
+  
+  button_next = "次へ",
+  button_restart = "再開始",
+  button_mark = "座標記録",
+  button_stop = "中断",
+  button_close = "閉じる",
+}
+
+
 
 function doRequire(filename)
     local _modulesPath = ShroudLuaPath .. modulesPath
@@ -30,7 +61,8 @@ function doRequire(filename)
     _G["init_" .. filename] = assert(loadsafe(data))
 end
 
-function ShroudOnStart()
+function ShroudOnStart()  
+  
   doRequire('lib_ui_bearings')
   ui_bearings = init_lib_ui_bearings()
   
@@ -59,6 +91,8 @@ function ShroudOnStart()
   waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-14.png", true)
   waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-15.png", true)
   
+  ConsoleLog(string.format(__("msg_shroud_on_start", "WAYPOINTS.lua loaded version %s"), waypoints.VERSION))
+  
 end
 
 function drawAngleText(angle, distance, text)
@@ -77,13 +111,18 @@ function doNavigate()
   ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.top - 2, waypoints.window.width, 20, "<color=#000000FF>WAYPOINTS.lua</color>")
   
   if waypoints.enabled == 0 then
-    ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, "案内は終了しました。")
+    ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, __("msg_guide_completed_short", "Done guiding."))
     return
   end
   
   
   local angle, distance, hdiff
   local mx, my, mouseOver = 0
+  local comment = lib_waypoints.target.comment
+  if comment == "" then
+    comment = __("msg_no_comment", "Please move along")
+  end
+  
   
   mx = ShroudMouseX
   my = ShroudMouseY
@@ -94,10 +133,10 @@ function doNavigate()
   
   if lib_waypoints.target.map != "" then
     if lib_waypoints.target.map != ShroudGetCurrentSceneName() then
-      ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, "マップ移動: " .. lib_waypoints.target.map)
+      ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, string.format(__("msg_move_map_short", "Move to: %s"), lib_waypoints.target.map))
       if mouseOver == 1 then
-        showAlert("マップ " .. lib_waypoints.target.map .. " に移動してください。", 2)
-      end      
+        showAlert(string.format(__("msg_move_map_long", "Please move to map: %s"), lib_waypoints.target.map), 2)
+      end
       return
     end
   end
@@ -115,7 +154,7 @@ function doNavigate()
     drawAngleText(angle, distance / 10, "o")
   end
   
-  ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, string.format("目的地まで %0.1f", distance))
+  ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, string.format(__("msg_distance_short", "Distance: %0.1f"), distance))
   
   if distance < 3 then
     doNext()
@@ -134,7 +173,7 @@ function doNavigate()
   end
   
   if mouseOver == 1 then
-    showAlert(string.format("次の目的地: " .. lib_waypoints.target.comment), 2)    
+    showAlert(string.format(__("msg_next_location_long", "Next waypoint. %s"), comment), 2)    
   end
   
   local client_width 　= ShroudGetScreenX()
@@ -212,23 +251,23 @@ function ShroudOnGUI()
   end
   
   if waypoints.textures.button > 0 then
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 0, 64, 21, waypoints.textures.button, "次へ", "次のポイントへ移動") then
+    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 0, 64, 21, waypoints.textures.button, __("button_next", "Next"), "") then
       doNext()
       return
     end
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 1, 64, 21, waypoints.textures.button, "再開始", "最初から案内開始") then
+    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 1, 64, 21, waypoints.textures.button, __("button_restart", "Restart"), "") then
       lib_waypoints.doRestart()
       doNext()
       return
     end
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 2, 64, 21, waypoints.textures.button, "座標記録", "この地点を登録する") then
+    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 2, 64, 21, waypoints.textures.button, __("button_mark", "Mark Here"), "") then
       local current_loc = lib_waypoints.getWaypointString("")
       ConsoleLog("+WAYPOINT: " .. current_loc)      
     end
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 3, 64, 21, waypoints.textures.button, "案内終了", "案内を止める") then
+    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 3, 64, 21, waypoints.textures.button, __("button_stop", "Stop"), "") then
       waypoints.enabled = 0
     end
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 4, 64, 21, waypoints.textures.button, "閉じる", "UI を閉じる") then
+    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 4, 64, 21, waypoints.textures.button, __("button_close", "Close UI"), "") then
       waypoints.visible = 0
     end  
     
@@ -269,11 +308,11 @@ function doNext()
     waypoints.enabled = 0
     if lib_waypoints.doNext() then
       ConsoleLog("WAYPOINTS: Waypoint Set. " .. lib_waypoints.getCount() .. " waypoints remaining.")
-      showAlert(string.format("次の目的地を設定しました。 " .. lib_waypoints.target.comment), 5)
+      showAlert(string.format(__("msg_next_node_found_long", "Next waypoint found. %s"), lib_waypoints.target.comment), 5)
       waypoints.enabled = 1
     else      
       ConsoleLog("WAYPOINTS: End of route.");
-      showAlert(string.format("目的地に到着しました。"), 5)
+      showAlert(string.format(__("msg_arrived_long", "Arrived at destination.")), 5)
     end
 end  
 
@@ -313,7 +352,7 @@ function dispatchCommand(channel, sender, cmd, arg)
   
   if (arg == "stop") and (as_self == 1) then
     waypoints.enabled = 0
-    showAlert("目的地のガイドを中断しました。", 5)
+    showAlert(__("msg_command_stop", "Guide terminated"), 5)
     return
   end  
   
