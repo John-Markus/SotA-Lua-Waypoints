@@ -20,7 +20,7 @@ end
 
 
 waypoints = {
-  VERSION = "0.9.5",
+  VERSION = "0.9.7",
   ui_initialized = 0,
   enabled = 0,
   visible = 1,
