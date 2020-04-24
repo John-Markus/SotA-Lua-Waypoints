@@ -4,8 +4,8 @@
 
 
 local modulesPath = "\\waypoints\\modules\\"
-local ui_bearings
-local lib_waypoints
+local ui_bearings = false
+local lib_waypoints = false
 
 local test_course = "[\"316.7,104.0,-124.3\",\"Kai\",\"John さんの家の周りをまわりましょう！\"|\"361.8,103.4,-127.3\"|\"366.3,104.0,-64.4\",\"\",\"この先には秘密の迷路が！？\"|\"321.7,104.3,-59.5\",\"\",\"ここは入口反転型の家\"|\"318.1,104.0,-124.4\",\"\",\"ゴールまであと少しです。\"]"
 
@@ -21,6 +21,7 @@ end
 
 waypoints = {
   VERSION = "0.9.5",
+  ui_initialized = 0,
   enabled = 0,
   visible = 1,
   arrow_size = 40,
@@ -61,19 +62,27 @@ function doRequire(filename)
     _G["init_" .. filename] = assert(loadsafe(data))
 end
 
-function ShroudOnStart()  
-  
+function ShroudOnStart() 
   doRequire('lib_ui_bearings')
   ui_bearings = init_lib_ui_bearings()
   
   doRequire('lib_waypoints')
   lib_waypoints = init_lib_waypoints()
+  
+end
+
+function InitApp()  
+  if (waypoints.ui_initialized == 1) then return end
+  
+  waypoints.ui_initialized = 1  
+  
   lib_waypoints.doSetLast(test_course)
   
   waypoints.textures.backdrop = ShroudLoadTexture("waypoints/images/backdrop.png", true)
   waypoints.textures.alert    = ShroudLoadTexture("waypoints/images/alert.png", true)
   waypoints.textures.button   = ShroudLoadTexture("waypoints/images/blank.png", true)
   
+  waypoints.textures.arrows = {}
   waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-0.png", true)
   waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-1.png", true)
   waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-2.png", true)
@@ -208,8 +217,6 @@ function doNavigate()
   ShroudDrawTexture(ax -waypoints.arrow_size / 2, ay -waypoints.arrow_size / 2, waypoints.arrow_size, waypoints.arrow_size, waypoints.textures.arrows[imgidx + 1], StretchToFill)
   ShroudGUILabel(ax - waypoints.arrow_size / 2, ay + waypoints.arrow_size / 2, 40, 20, string.format("%0.1f", distance))
   
-  
-  
 end
 
 function showAlert(msg, timeout)
@@ -218,6 +225,8 @@ function showAlert(msg, timeout)
 end
 
 function ShroudOnGUI()
+  if waypoints.ui_initialized == 0 then return end
+  
   ui_bearings.doFocusBearings()
   
   local client_width 　= ShroudGetScreenX()
@@ -233,13 +242,13 @@ function ShroudOnGUI()
     return
   end  
   
-  
-  
+  -- set window box size for events
   waypoints.window_box.left = client_width - waypoints.window.right - waypoints.window.width
   waypoints.window_box.top  = waypoints.window.top
   waypoints.window_box.right = waypoints.window_box.left + waypoints.window.width
   waypoints.window_box.bottom = waypoints.window_box.top + waypoints.window.height
   
+  -- set arrow box size for edge limiting
   waypoints.arrow_box.left = waypoints.window.right + waypoints.window.width
   waypoints.arrow_box.right = client_width - waypoints.arrow_box.left
   waypoints.arrow_box.top = waypoints.window.top + waypoints.window.height
@@ -289,8 +298,15 @@ function ShroudOnGUI()
   
 end
 
-function ShroudOnUpdate()
-  ui_bearings.doDetectBearings()
+function ShroudOnUpdate()  
+  if waypoints.ui_initialized == 0 then
+    InitApp()
+    return
+  end
+  
+  if (ui_bearings) then
+    ui_bearings.doDetectBearings()
+  end
 end
 
 function ShroudOnConsoleInput(channel, sender, message) 
@@ -406,7 +422,4 @@ function dispatchCommand(channel, sender, cmd, arg)
   ShroudConsoleLog("Syntax: \\" .. cmd .. " next          - 次の目標地点へ")
   
 end
-
-
-
 
