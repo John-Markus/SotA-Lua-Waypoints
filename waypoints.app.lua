@@ -3,7 +3,7 @@
 -- depends on libsota.0.4.x
 
 
-local modulesPath = "\\waypoints\\"
+local modulesPath = "\\waypoints\\modules\\"
 local ui_bearings
 local lib_waypoints
 
@@ -38,26 +38,26 @@ function ShroudOnStart()
   lib_waypoints = init_lib_waypoints()
   lib_waypoints.doSetLast(test_course)
   
-  waypoints.textures.backdrop = ShroudLoadTexture("waypoints/backdrop.png", true)
-  waypoints.textures.alert    = ShroudLoadTexture("waypoints/alert.png", true)
-  waypoints.textures.button   = ShroudLoadTexture("waypoints/blank.png", true)
+  waypoints.textures.backdrop = ShroudLoadTexture("waypoints/images/backdrop.png", true)
+  waypoints.textures.alert    = ShroudLoadTexture("waypoints/images/alert.png", true)
+  waypoints.textures.button   = ShroudLoadTexture("waypoints/images/blank.png", true)
   
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-0.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-1.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-2.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-3.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-4.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-5.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-6.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-7.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-8.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-9.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-10.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-11.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-12.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-13.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-14.png", true)
-  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/arrow-15.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-0.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-1.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-2.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-3.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-4.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-5.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-6.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-7.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-8.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-9.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-10.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-11.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-12.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-13.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-14.png", true)
+  waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-15.png", true)
   
 end
 
