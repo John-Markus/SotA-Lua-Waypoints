@@ -20,8 +20,4 @@ Following additional commands are available
 
 ## How the script works
 
-This script monitors player's movement in the game to get the bearings.
-It monitors key input to identify irregular movements such as strafing.
-
-Using current and target coordinates, and UI bearing, it shows in which
-direction the destination is located relative to the current UI rotations.
+This script monitors player's movement in the game to get the bearings. It monitors key input to identify irregular movements such as side strafing. Using current and target coordinates, and UI bearing, it shows in which direction the destination is located relative to the current UI rotations.
