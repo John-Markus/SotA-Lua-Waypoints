@@ -31,6 +31,7 @@ waypoints = {
   arrow_box = { left, top, right, bottom },
   textures = { backdrop, alert, button, arrows = {} },
   alerts = { msg, timeout = 0},  
+  win_hider_x = 0,
 }
 
 localizations = {
@@ -116,11 +117,18 @@ function drawAngleText(angle, distance, text)
   
 end
 
+function showMainUIStatus(msg)
+  if not ShroudIsCharacterSheetActive() then
+    ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, msg)
+  end
+end
+
+
 function doNavigate()
   ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.top - 2, waypoints.window.width, 20, "<color=#000000FF>WAYPOINTS.lua</color>")
   
   if waypoints.enabled == 0 then
-    ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, __("msg_guide_completed_short", "Done guiding."))
+    showMainUIStatus(__("msg_guide_completed_short", "Done guiding."))
     return
   end
   
@@ -137,12 +145,14 @@ function doNavigate()
   my = ShroudMouseY
   
   if (mx >= waypoints.window_box.left) and (mx <= waypoints.window_box.left + 100) and (my >= waypoints.window_box.top) and (my <= waypoints.window_box.bottom) then
-    mouseOver = 1
+    if not ShroudIsCharacterSheetActive() then
+      mouseOver = 1
+    end
   end
   
   if lib_waypoints.target.map != "" then
     if lib_waypoints.target.map != ShroudGetCurrentSceneName() then
-      ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, string.format(__("msg_move_map_short", "Move to: %s"), lib_waypoints.target.map))
+      showMainUIStatus(string.format(__("msg_move_map_short", "Move to: %s"), lib_waypoints.target.map))
       if mouseOver == 1 then
         showAlert(string.format(__("msg_move_map_long", "Please move to map: %s"), lib_waypoints.target.map), 2)
       end
@@ -156,33 +166,36 @@ function doNavigate()
   distance = math.sqrt(math.pow(lib_waypoints.target.x - ShroudPlayerX, 2) + math.pow(lib_waypoints.target.y - ShroudPlayerY, 2) + math.pow(lib_waypoints.target.z - ShroudPlayerZ, 2))
   
   
-  
-  if distance > 20 then
-    drawAngleText(angle, 2, "x")
-  else
-    drawAngleText(angle, distance / 10, "o")
+  if not ShroudIsCharacterSheetActive() then
+    if distance > 20 then
+      drawAngleText(angle, 2, "x")
+    else
+      drawAngleText(angle, distance / 10, "o")
+    end
   end
   
-  ShroudGUILabel(waypoints.window_box.left + 3, waypoints.window_box.bottom - 20, waypoints.window.width, 20, string.format(__("msg_distance_short", "Distance: %0.1f"), distance))
+  showMainUIStatus(string.format(__("msg_distance_short", "Distance: %0.1f"), distance))
   
   if distance < 3 then
     doNext()
   end
   
   hdiff = lib_waypoints.target.y- ShroudPlayerY
-  if hdiff < 0 then
-    local hy = hdiff
-    if (hdiff < -24) then hy = -24 end
-    ShroudGUILabel(waypoints.window_box.left + 105, waypoints.window_box.top + waypoints.window.height / 2 - hy * 2 - 10, 40, 20, string.format("%0.1f", hdiff))
-  end
-  if hdiff > 0 then
-    local hy = hdiff
-    if (hdiff > 24) then hy = 24 end
-    ShroudGUILabel(waypoints.window_box.left + 105, waypoints.window_box.top + waypoints.window.height / 2 - hy * 2 - 10, 40, 20, string.format("+%0.1f", hdiff))
-  end
-  
-  if mouseOver == 1 then
-    showAlert(string.format(__("msg_next_location_long", "Next waypoint. %s"), comment), 2)    
+  if not ShroudIsCharacterSheetActive() then
+    if hdiff < 0 then
+      local hy = hdiff
+      if (hdiff < -24) then hy = -24 end
+      ShroudGUILabel(waypoints.window_box.left + 105, waypoints.window_box.top + waypoints.window.height / 2 - hy * 2 - 10, 40, 20, string.format("%0.1f", hdiff))
+    end
+    if hdiff > 0 then
+      local hy = hdiff
+      if (hdiff > 24) then hy = 24 end
+      ShroudGUILabel(waypoints.window_box.left + 105, waypoints.window_box.top + waypoints.window.height / 2 - hy * 2 - 10, 40, 20, string.format("+%0.1f", hdiff))
+    end
+    
+    if mouseOver == 1 then
+      showAlert(string.format(__("msg_next_location_long", "Next waypoint. %s"), comment), 2)    
+    end
   end
   
   local client_width 　= ShroudGetScreenX()
@@ -242,8 +255,18 @@ function ShroudOnGUI()
     return
   end  
   
+  if ShroudIsCharacterSheetActive() then  
+    waypoints.win_hider_x = waypoints.win_hider_x - 10
+    if (waypoints.win_hider_x < 3) then waypoints.win_hider_x = 3 end
+  else
+    local hider_limit = waypoints.window.right + waypoints.window.width
+    waypoints.win_hider_x = waypoints.win_hider_x + 10
+    if (waypoints.win_hider_x > hider_limit) then waypoints.win_hider_x = hider_limit end
+  end
+    
+  
   -- set window box size for events
-  waypoints.window_box.left = client_width - waypoints.window.right - waypoints.window.width
+  waypoints.window_box.left = client_width - waypoints.win_hider_x
   waypoints.window_box.top  = waypoints.window.top
   waypoints.window_box.right = waypoints.window_box.left + waypoints.window.width
   waypoints.window_box.bottom = waypoints.window_box.top + waypoints.window.height
@@ -254,45 +277,47 @@ function ShroudOnGUI()
   waypoints.arrow_box.top = waypoints.window.top + waypoints.window.height
   waypoints.arrow_box.bottom = client_height - waypoints.arrow_box.top
   
-
+  
   if waypoints.textures.backdrop > 0 then
     ShroudDrawTexture(waypoints.window_box.left, waypoints.window_box.top, waypoints.window.width, waypoints.window.height, waypoints.textures.backdrop, StretchToFill)
   end
   
-  if waypoints.textures.button > 0 then
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 0, 64, 21, waypoints.textures.button, __("button_next", "Next"), "") then
-      doNext()
-      return
+  if not ShroudIsCharacterSheetActive() then  
+    if waypoints.textures.button > 0 then
+      if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 0, 64, 21, waypoints.textures.button, __("button_next", "Next"), "") then
+        doNext()
+        return
+      end
+      if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 1, 64, 21, waypoints.textures.button, __("button_restart", "Restart"), "") then
+        lib_waypoints.doRestart()
+        doNext()
+        return
+      end
+      if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 2, 64, 21, waypoints.textures.button, __("button_mark", "Mark Here"), "") then
+        local current_loc = lib_waypoints.getWaypointString("")
+        ConsoleLog("+WAYPOINT: " .. current_loc)      
+      end
+      if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 3, 64, 21, waypoints.textures.button, __("button_stop", "Stop"), "") then
+        waypoints.enabled = 0
+      end
+      if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 4, 64, 21, waypoints.textures.button, __("button_close", "Close UI"), "") then
+        waypoints.visible = 0
+      end  
+      
     end
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 1, 64, 21, waypoints.textures.button, __("button_restart", "Restart"), "") then
-      lib_waypoints.doRestart()
-      doNext()
-      return
-    end
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 2, 64, 21, waypoints.textures.button, __("button_mark", "Mark Here"), "") then
-      local current_loc = lib_waypoints.getWaypointString("")
-      ConsoleLog("+WAYPOINT: " .. current_loc)      
-    end
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 3, 64, 21, waypoints.textures.button, __("button_stop", "Stop"), "") then
-      waypoints.enabled = 0
-    end
-    if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 4, 64, 21, waypoints.textures.button, __("button_close", "Close UI"), "") then
-      waypoints.visible = 0
-    end  
-    
-  end
   
   
   -- Set center of navigation
   
-  waypoints.adraw.scale = 20
-  waypoints.adraw.cx = waypoints.window_box.left + 50
-  waypoints.adraw.cy = waypoints.window_box.top + 57
-  
-  drawAngleText(0, 1, "N")
-  drawAngleText(90, 1, "E")
-  drawAngleText(180, 1, "S")
-  drawAngleText(270, 1, "W")
+    waypoints.adraw.scale = 20
+    waypoints.adraw.cx = waypoints.window_box.left + 50
+    waypoints.adraw.cy = waypoints.window_box.top + 57
+    
+    drawAngleText(0, 1, "N")
+    drawAngleText(90, 1, "E")
+    drawAngleText(180, 1, "S")
+    drawAngleText(270, 1, "W")
+  end
   
   doNavigate()
   
