@@ -4,11 +4,31 @@ UIB.focus_speed = 360.0
 UIB.bearing = 0
 UIB.bearingFocused = 0
 UIB.self = { 
-  this_loc = {x = ShroudPlayerX, y = ShroudPlayerY, z = ShroudPlayerZ, t},
-  last_loc = {x = ShroudPlayerX, y = ShroudPlayerY, z = ShroudPlayerZ, t},
+  this_loc = {x = ShroudPlayerX, y = ShroudPlayerY, z = ShroudPlayerZ, t = os.time()},
+  last_loc = {x = ShroudPlayerX, y = ShroudPlayerY, z = ShroudPlayerZ, t = os.time()},
   hints = {d, t},
   last_frame = 0,  
 }
+
+UIB.self.doSanity = function()
+  local is_sane = true
+  
+  if UIB.self.last_loc.x == nil then 
+    UIB.self.last_loc.x = ShroudPlayerX 
+    is_sane = false
+  end
+  if UIB.self.last_loc.y == nil then 
+    UIB.self.last_loc.y = ShroudPlayerY 
+    is_sane = false
+  end
+  if UIB.self.last_loc.z == nil then 
+    UIB.self.last_loc.z = ShroudPlayerZ 
+    is_sane = false
+  end
+  
+  return is_sane
+end
+
 
 -- Try to generate hints for changes caused by the user movement
 UIB.self.doDetectMovementHints = function()
@@ -53,6 +73,8 @@ end
 
 UIB.self.doCalculateAngles = function()
   local angle
+  
+  if not UIB.self.doSanity() then return end
   
   UIB.self.this_loc.x = ShroudPlayerX
   UIB.self.this_loc.y = ShroudPlayerY

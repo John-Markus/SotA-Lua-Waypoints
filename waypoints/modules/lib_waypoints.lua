@@ -51,9 +51,6 @@ WPT.doGetOptimized = function()
   return "[" .. result .. "]"
     
 end
-  
-
-
 
 WPT.doSetJson = function (arg)
   WPT.self.current_node = {}
@@ -128,9 +125,5 @@ WPT.getWaypointString = function(comment)
   table.insert(WPT.self.saved_nodes, a)
   return json.serialize(a)
 end
-
-
-
-
 
 return WPT
