@@ -5,18 +5,18 @@ This script adds waypoint navigation to the Shroud of the Avatar game client.
 ## How to use
 
 New waypoints can be configured by typing following in the Chatbox
-
-\waypoints set [route parameters]
+    
+    \waypoints set [route parameters]
 
 Route parameters is a JSON array *WITHOUT* the outermost []s
 (Moonsharp JSON parser does not allow nested array as first element)
 
 Following additional commands are available
 
-\waypoints get [comment]        - Mark current location
-\waypoints save                 - Save optimized listing of all marked locations
-\waypoints next                 - Choose next waypoint
-\waypoints stop                 - Stop navigating
+    \waypoints get [comment]        - Mark current location
+    \waypoints save                 - Save optimized listing of all marked locations
+    \waypoints next                 - Choose next waypoint
+    \waypoints stop                 - Stop navigating
 
 ## How the script works
 
