@@ -20,6 +20,7 @@ Following additional commands are available
     \waypoints restart              - Restart navigation from beginning
     \waypoints revert               - Restart from previous route (undo overwrites by others)
     \waypoints load [path]          - Load navigation file from disk (adds .txt automatically)
+                                      " " (spaces) inside path will be converted to underline.
 
 ### Waypoint set
 \waypoint set can be initiated by following parties:
