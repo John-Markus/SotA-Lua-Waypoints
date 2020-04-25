@@ -7,6 +7,6 @@
 ["-56,33,29","Kiln",""]
 ["-58,35,33","Kiln","Talk to Wounded Fawn"]
 
-["-52,35,36","Kiln","Talk to Dion about Perri, Artifice, and Blackblade Pass"]
+["-48,33,29","Kiln","Talk to Dion about Perri, Artifice, and Blackblade Pass"]
 
 ["!path of truth/step6_etceter"]

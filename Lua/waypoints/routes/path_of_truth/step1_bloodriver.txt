@@ -3,6 +3,8 @@
 
 ["-59,51,47","","Talk to Robert Villines, answer Yes"]
 
+["-115,53,44","Blood River Massacre","Take a sword"]
+
 ["-120,57,54","","Talk to Zac about dagger"]
 
 ["-117,58,-29","","Find dagger in the building"]
@@ -19,6 +21,6 @@
 
 ["23,43,10","","Find boat at use boat"]
 
-["77,60,127","Blood River Outskirts","arrived at Blood River Outskirts"]
+["77,60,127","Blood River Outskirts","Use the boat to Blood River Outskirts"]
 
 ["!path of truth/step2_aerie"]

@@ -8,7 +8,7 @@
 
 ["103,22,-54","Etceter","Talk to Harbormaster"]
 
-["100,23,-45","Etceter","Talk to Harbormaster about passage and something for you"]
+["99,23,-35","Etceter","Talk to Harbormaster about passage and something for you"]
 
 ["89,23,-37","Etceter","Talk to Lady Ransom"]
 
@@ -47,7 +47,5 @@
 ["104,22,-51","Etceter","Talk to Harbormaster"]
 
 ["125,21,-29","Etceter","Talk to Ship Captain about passage and travel to Xenos"]
-
-["124,36,54","Xenos","Arrive at Xenos"]
 
 ["!path of truth/step7_xenos"]

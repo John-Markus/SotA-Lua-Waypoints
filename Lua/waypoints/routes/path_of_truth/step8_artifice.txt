@@ -43,7 +43,7 @@
 ["194,-10,-166","Halls of Artifice","Talk to Kobold Blacksmith"]
 ["202,-9,-168","Halls of Artifice","Talk to Hephaestus about Destiny"]
 
-["229,-15,-167","Halls of Artifice","Arrived at Exit"]
+["229,-15,-167","Halls of Artifice","Arrive at Exit"]
 ["283,-14,-167","Halls of Artifice","Enter Library"]
 ["318,-19,-167","Halls of Artifice",""]
 ["321,-19,-161","Halls of Artifice","Talk to Kiakis"]

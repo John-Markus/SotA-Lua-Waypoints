@@ -10,4 +10,6 @@
 ["391,30,-150","Aerie","Talk to Kyle Behrand"]
 ["386,30,-152","Aerie","Talk to Kyle Behrand about bonesteel, boreas, and vertas"]
 
+["362,27,-172","Aerie",""]
+
 ["!path of truth/step3_vertas"]
