@@ -19,6 +19,7 @@ Following additional commands are available
     \waypoints stop                 - Stop navigating
     \waypoints restart              - Restart navigation from beginning
     \waypoints revert               - Restart from previous route (undo overwrites by others)
+    \waypoints load [path]          - Load navigation file from disk (adds .txt automatically)
 
 ### Waypoint set
 \waypoint set can be initiated by following parties:
@@ -44,6 +45,7 @@ For this reason, the script encapsulates the input using "\[1," and "\]" before 
     - Name of map (leave blank to make it same as previous map)
     - Comment
 - If there are no values, items on the back may be left out.
+- Use `["!<path>"]` to link to another navigation file (no relative paths)
 
 Example route:
 
