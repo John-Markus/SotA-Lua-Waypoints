@@ -20,7 +20,7 @@ end
 
 
 waypoints = {
-  VERSION = "0.9.7",
+  VERSION = "0.9.8",
   ui_initialized = 0,
   enabled = 0,
   visible = 1,
@@ -398,7 +398,12 @@ function dispatchCommand(channel, sender, cmd, arg)
   
   if arg == "" then arg = "get" end
   if sender == ShroudGetPlayerName() then as_self = 1 end
-  if channel == "party" then as_friend = 1 end  
+  if channel == "Party" then as_friend = 1 end  
+  if channel == "Private" then 
+    as_friend = 1     
+    -- do not react to yourselves
+    if sender == ShroudGetPlayerName() then return end
+  end  
   
   -- get current waypoint
   if (arg == "get") and (as_self == 1) then
@@ -469,6 +474,7 @@ function dispatchCommand(channel, sender, cmd, arg)
   
    
   if valid_arg == 1 then return end
+  if as_self == 0 then return end
   ShroudConsoleLog("Syntax: \\" .. cmd .. " get [comment] - 現在位置を記録")
   ShroudConsoleLog("Syntax: \\" .. cmd .. " save          - 記録した移動ルートを表示")
   
