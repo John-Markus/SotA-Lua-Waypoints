@@ -43,8 +43,8 @@
 ["194,-10,-166","Halls of Artifice","Talk to Kobold Blacksmith"]
 ["202,-9,-168","Halls of Artifice","Talk to Hephaestus about Destiny"]
 
-["229,-15,-167","Halls of Artifice","Arrive at Exit"]
-["283,-14,-167","Halls of Artifice","Enter Library"]
+["229,-15,-167","Halls of Artifice","Arrive at Lycaeum"]
+["283,-14,-167","Halls of Artifice","Enter Lycaeum"]
 ["318,-19,-167","Halls of Artifice",""]
 ["321,-19,-161","Halls of Artifice","Talk to Kiakis"]
 
@@ -52,11 +52,21 @@
 ["316,-19,-125","Halls of Artifice","Talk to Curious Faun"]
 ["319,-19,-128","Halls of Artifice","Talk to Perri about Homily"]
 ["318,-19,-168","Halls of Artifice",""]
-["280,-14,-167","Halls of Artifice","Arrive at Exit"]
+["280,-14,-167","Halls of Artifice","Exit Lycaeum"]
 
 ["230,-15,-168","Halls of Artifice","Enter the Royal Forge"]
 ["206,-10,-167","Halls of Artifice",""]
 ["197,-9,-168","Halls of Artifice","Warning: Lava kills !"]
 ["197,-9,-168","Halls of Artifice","Talk to Hephaestus about Destiny"]
 
+-- A little bonus:
+["229,-15,-167","Halls of Artifice","Arrive at Lycaeum"]
+["283,-14,-167","Halls of Artifice","Enter Lycaeum"]
 
+["318,-19,-168","Halls of Artifice",""]
+["319,-19,-207","Halls of Artifice",""]
+["279,-19,-208","Halls of Artifice",""]
+["279,-14,-176","Halls of Artifice",""]
+["271,-14,-168","Halls of Artifice",""]
+
+["-7,32,24","Elysian Ruins","Arrive at Elysian Ruins"]
