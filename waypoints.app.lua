@@ -20,7 +20,7 @@ end
 
 
 waypoints = {
-  VERSION = "0.9.8",
+  VERSION = "0.9.9",
   ui_initialized = 0,
   enabled = 0,
   visible = 1,
@@ -34,6 +34,7 @@ waypoints = {
   textures = { backdrop, alert, button, arrows = {}, stairs, },
   alerts = { msg, timeout = 0},  
   win_hider_x = 0,
+  waypoint_set_by = "",
 }
 
 localizations = {
@@ -379,7 +380,8 @@ function doNext()
     waypoints.enabled = 0
     if lib_waypoints.doNext() then
       ConsoleLog("WAYPOINTS: Waypoint Set. " .. lib_waypoints.getCount() .. " waypoints remaining.")
-      showAlert(string.format(__("msg_next_node_found_long", "Next waypoint found. %s"), lib_waypoints.target.comment), 5)
+      showAlert(waypoints.waypoint_set_by .. string.format(__("msg_next_node_found_long", "Next waypoint found. %s"), lib_waypoints.target.comment), 5)
+      waypoints.waypoint_set_by = ""
       waypoints.enabled = 1
     else      
       ConsoleLog("WAYPOINTS: End of route.");
@@ -399,10 +401,12 @@ function dispatchCommand(channel, sender, cmd, arg)
   if arg == "" then arg = "get" end
   if sender == ShroudGetPlayerName() then as_self = 1 end
   if channel == "Party" then as_friend = 1 end  
+  if channel == "NPC" then as_friend = 1 end  
   if channel == "Private" then 
     as_friend = 1     
     -- do not react to yourselves
     if sender == ShroudGetPlayerName() then return end
+    
   end  
   
   -- get current waypoint
@@ -425,6 +429,19 @@ function dispatchCommand(channel, sender, cmd, arg)
     doNext()
     return
   end  
+  
+  if (arg == "restart") and (as_self == 1) then
+    lib_waypoints.doRestart()
+    doNext()
+    return
+  end    
+  
+  if (arg == "revert") and (as_self == 1) then
+    lib_waypoints.doRevert()
+    doNext()
+    return
+  end    
+  
   
   if (arg == "stop") and (as_self == 1) then
     waypoints.enabled = 0
@@ -461,6 +478,10 @@ function dispatchCommand(channel, sender, cmd, arg)
     if (as_self == 1) or (as_friend == 1) then
       waypoints.enabled = 0
       if lib_waypoints.doSetJson(string.sub(arg, 5)) then
+        waypoints.waypoint_set_by = ""
+        if sender != ShroudGetPlayerName() then
+          waypoints.waypoint_set_by = string.format("%s: ", sender)
+        end
         ConsoleLog("WAYPOINTS: Waypoint Set. " .. lib_waypoints.getCount() .. " waypoints read.")
         doNext()
         waypoints.enabled = 1
@@ -476,11 +497,15 @@ function dispatchCommand(channel, sender, cmd, arg)
   if valid_arg == 1 then return end
   if as_self == 0 then return end
   ShroudConsoleLog("Syntax: \\" .. cmd .. " get [comment] - 現在位置を記録")
-  ShroudConsoleLog("Syntax: \\" .. cmd .. " save          - 記録した移動ルートを表示")
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " save          - 記録した移動ルートを最適化して表示")
   
   ShroudConsoleLog("Syntax: \\" .. cmd .. " set [route]   - 移動ルートを指定")  
-  
   ShroudConsoleLog("Syntax: \\" .. cmd .. " next          - 次の目標地点へ")
+  
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " restart       - 移動を再開")  
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " revert        - 前回のルートに巻き戻す")  
+  
+  
   
 end
 
