@@ -8,6 +8,7 @@ local WPT = {
     saved_nodes = {},
   },
   target = {x, y, z, map, comment},
+  module_paths = "\\waypoints\\routes\\",
 }
 
 WPT.self.parseJson = function(arg)
@@ -17,6 +18,7 @@ end
 WPT.getCount = function()
   return #WPT.self.nodes
 end
+
 
 WPT.doGetOptimized = function()
   local result = ""
@@ -88,6 +90,38 @@ WPT.doSetJson = function (arg)
   end
 end
 
+WPT.doLoad = function(filename)
+  filename = filename:gsub(" ", "_")
+  local path = ShroudLuaPath .. WPT.module_paths .. filename .. ".txt"
+  path = path:gsub("\\", "/")
+  ConsoleLog("WAYPOINTS: Attempting to load from " .. path)
+  
+  -- test if file exists
+  local f = io.open(path, "rb")
+  if f then f:close() end
+  if f == nil then
+    ConsoleLog("WAYPOINTS: File not found.")
+    return false
+  end
+  
+  local result = ""
+  local separator = ""
+  for line in io.lines(path) do
+    line = line:gsub("^%s+", ""):gsub("%s+$", "")
+    if string.sub(line, 1,2) == "--" then line = "" end
+    if line != "" then
+      result = result .. separator .. line
+      separator = ","
+    end
+  end
+  
+  if result != "" then
+    ConsoleLog("WAYPOINTS: File loaded. " .. result)
+    return WPT.doSetJson(result)
+  end
+  return false
+ 
+end
 
 
 WPT.doNext = function()
@@ -101,6 +135,14 @@ WPT.doNext = function()
   -- parse it
   WPT.target.map = WPT.self.last_map
   WPT.target.comment = ""
+  
+  if string.sub(WPT.self.current_node[1],1,1) == "!" then
+    if WPT.doLoad(string.sub(WPT.self.current_node[1],2)) then
+      WPT.self.current_node = table.remove(WPT.self.nodes, 1)
+    else
+      return false
+    end
+  end
   
   WPT.target.x, WPT.target.y, WPT.target.z = string.match(WPT.self.current_node[1], "^(-?[0-9.]+),(-?[0-9.]+),(-?[0-9.]+)$")
   if #WPT.self.current_node >= 2 then WPT.target.map = WPT.self.current_node[2] end
