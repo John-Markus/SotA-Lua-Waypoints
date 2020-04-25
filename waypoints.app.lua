@@ -29,7 +29,9 @@ waypoints = {
   window = { right = 100, top = 75, width = 200, height = 137},
   window_box = { left, top, right, bottom },
   arrow_box = { left, top, right, bottom },
-  textures = { backdrop, alert, button, arrows = {} },
+  arrow_angle = 0,
+  gui_time = { l, s, t},
+  textures = { backdrop, alert, button, arrows = {}, stairs, },
   alerts = { msg, timeout = 0},  
   win_hider_x = 0,
 }
@@ -77,11 +79,14 @@ function InitApp()
   
   waypoints.ui_initialized = 1  
   
+  waypoints.gui_time.l = os.time()
+  
   lib_waypoints.doSetLast(test_course)
   
   waypoints.textures.backdrop = ShroudLoadTexture("waypoints/images/backdrop.png", true)
   waypoints.textures.alert    = ShroudLoadTexture("waypoints/images/alert.png", true)
   waypoints.textures.button   = ShroudLoadTexture("waypoints/images/blank.png", true)
+  waypoints.textures.stairs   = ShroudLoadTexture("waypoints/images/stairs.png", true)
   
   waypoints.textures.arrows = {}
   waypoints.textures.arrows[1+#waypoints.textures.arrows] = ShroudLoadTexture("waypoints/images/arrow-0.png", true)
@@ -134,6 +139,7 @@ function doNavigate()
   
   
   local angle, distance, hdiff
+  local hdist, vdist
   local mx, my, mouseOver = 0
   local comment = lib_waypoints.target.comment
   if comment == "" then
@@ -164,6 +170,8 @@ function doNavigate()
   angle = (angle / math.pi * 180)  
   
   distance = math.sqrt(math.pow(lib_waypoints.target.x - ShroudPlayerX, 2) + math.pow(lib_waypoints.target.y - ShroudPlayerY, 2) + math.pow(lib_waypoints.target.z - ShroudPlayerZ, 2))
+  hdist = math.sqrt(math.pow(lib_waypoints.target.x - ShroudPlayerX, 2) + math.pow(lib_waypoints.target.z - ShroudPlayerZ, 2))
+  vdist = math.abs(lib_waypoints.target.y - ShroudPlayerY)
   
   
   if not ShroudIsCharacterSheetActive() then
@@ -209,8 +217,20 @@ function doNavigate()
     scale = scale * (distance / 20)
   end
   
-  ax = (client_width  / 2) + math.sin(angle_diff / 180 * math.pi) * scale
-  ay = (client_height / 2) - math.cos(angle_diff / 180 * math.pi) * scale
+  -- check for stairs
+  if (hdist < 20) and (vdist > 5) then
+    if lib_waypoints.target.y - ShroudPlayerY > 0 then
+      angle_diff = 0
+    else
+      angle_diff = 180
+    end
+  end
+  
+  
+  waypoints.arrow_angle = ui_bearings.CAVRotate(waypoints.arrow_angle, angle_diff, 180 * waypoints.gui_time.s)
+  
+  ax = (client_width  / 2) + math.sin(waypoints.arrow_angle / 180 * math.pi) * scale
+  ay = (client_height / 2) - math.cos(waypoints.arrow_angle / 180 * math.pi) * scale
   
   if ax < waypoints.arrow_box.left   then ax = waypoints.arrow_box.left end
   if ay < waypoints.arrow_box.top    then ay = waypoints.arrow_box.top  end
@@ -219,13 +239,18 @@ function doNavigate()
   
   --ConsoleLog(ax .. "," .. ay)
   
-  local imgidx = math.floor((angle_diff + 22.5 / 2) / 22.5)
+  local imgidx = math.floor((waypoints.arrow_angle + 22.5 / 2) / 22.5)
   while imgidx < 0 do
     imgidx = imgidx + 16
   end
   while imgidx >= 16 do
     imgidx = imgidx - 16
   end
+  
+  if (hdist < 20) and (vdist > 5) then
+    ShroudDrawTexture(ax- waypoints.arrow_size, ay -waypoints.arrow_size / 2 - 16, waypoints.arrow_size  * 1.5, waypoints.arrow_size * 1.5, waypoints.textures.stairs, StretchToFill)
+  end
+  
   
   ShroudDrawTexture(ax -waypoints.arrow_size / 2, ay -waypoints.arrow_size / 2, waypoints.arrow_size, waypoints.arrow_size, waypoints.textures.arrows[imgidx + 1], StretchToFill)
   ShroudGUILabel(ax - waypoints.arrow_size / 2, ay + waypoints.arrow_size / 2, 40, 20, string.format("%0.1f", distance))
@@ -239,6 +264,11 @@ end
 
 function ShroudOnGUI()
   if waypoints.ui_initialized == 0 then return end
+  
+  -- check time slice
+  waypoints.gui_time.t = os.time()
+  waypoints.gui_time.s = waypoints.gui_time.t - waypoints.gui_time.l
+  waypoints.gui_time.l = waypoints.gui_time.t
   
   ui_bearings.doFocusBearings()
   
@@ -256,11 +286,11 @@ function ShroudOnGUI()
   end  
   
   if ShroudIsCharacterSheetActive() then  
-    waypoints.win_hider_x = waypoints.win_hider_x - 10
+    waypoints.win_hider_x = waypoints.win_hider_x - 2000 * waypoints.gui_time.s
     if (waypoints.win_hider_x < 3) then waypoints.win_hider_x = 3 end
   else
     local hider_limit = waypoints.window.right + waypoints.window.width
-    waypoints.win_hider_x = waypoints.win_hider_x + 10
+    waypoints.win_hider_x = waypoints.win_hider_x + 2000 * waypoints.gui_time.s
     if (waypoints.win_hider_x > hider_limit) then waypoints.win_hider_x = hider_limit end
   end
     
