@@ -48,4 +48,5 @@ For this reason, the script encapsulates the input using "\[1," and "\]" before 
 Example route:
 
 - Soltown to Ardoris Lighthouse bathtub
+
     \waypoints set ["60,31,193","Soltown"|"438,13,-311","Novia"|"399,11,-358"|"348,13,-398"|"154,56,194","Ardoris"|"143,56,137"|"93,56,-26"|"116,56,-35"|"102,53,-271"|"232,57,-263"|"238,46,-316"|"246,48,-316"|"257,65,-312"|"256,70,-321"|"258,76,-312"|"256,89,-322"]
