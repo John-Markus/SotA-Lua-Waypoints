@@ -19,7 +19,7 @@ end
 
 
 waypoints = {
-  VERSION = "1.0.0",
+  VERSION = "1.0.1",
   ui_initialized = 0,
   enabled = 0,
   visible = 1,
@@ -157,7 +157,7 @@ function doNavigate()
   end
   
   if lib_waypoints.target.map != "" then
-    if lib_waypoints.target.map != ShroudGetCurrentSceneName() then
+    if lib_waypoints.target.map != lib_waypoints.getSafeMapName() then
       showMainUIStatus(string.format(__("msg_move_map_short", "Move to: %s"), lib_waypoints.target.map))
       if mouseOver == 1 then
         showAlert(string.format(__("msg_move_map_long", "Please move to map: %s"), lib_waypoints.target.map), 2)
