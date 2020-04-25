@@ -12,5 +12,5 @@ as the name is changed.
  
  0. You just DO WHAT THE FUCK YOU WANT TO.
 
-
+# Graphical Resources
 NOTE: You must obtain licenses for image files used outside this project
