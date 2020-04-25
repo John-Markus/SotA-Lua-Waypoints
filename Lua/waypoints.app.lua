@@ -1,6 +1,5 @@
 -- waypoints.app by John Markus
 -- uses screen bearings to navigate players
--- depends on libsota.0.4.x
 
 
 local modulesPath = "\\waypoints\\modules\\"
@@ -20,7 +19,7 @@ end
 
 
 waypoints = {
-  VERSION = "0.9.9",
+  VERSION = "1.0.0",
   ui_initialized = 0,
   enabled = 0,
   visible = 1,
@@ -423,6 +422,14 @@ function dispatchCommand(channel, sender, cmd, arg)
     return
   end  
   
+  -- get current waypoint
+  if (string.sub(arg, 1, 5) == "load ") and (as_self == 1) then
+    waypoints.is_enabled = 0
+    if lib_waypoints.doLoad(string.sub(arg, 6)) then
+      doNext()
+     end
+    return
+  end  
   
   -- get next waypoint
   if (arg == "next") and (as_self == 1) then
@@ -496,14 +503,15 @@ function dispatchCommand(channel, sender, cmd, arg)
    
   if valid_arg == 1 then return end
   if as_self == 0 then return end
-  ShroudConsoleLog("Syntax: \\" .. cmd .. " get [comment] - 現在位置を記録")
-  ShroudConsoleLog("Syntax: \\" .. cmd .. " save          - 記録した移動ルートを最適化して表示")
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " get [comment] - " .. __("help_get",  "Mark current location"))
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " save          - " .. __("help_save", "Optimize marked location and dump listing"))
   
-  ShroudConsoleLog("Syntax: \\" .. cmd .. " set [route]   - 移動ルートを指定")  
-  ShroudConsoleLog("Syntax: \\" .. cmd .. " next          - 次の目標地点へ")
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " set [route]   - " .. __("help_set", "Set new route to navigate"))
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " next          - " .. __("help_next", "Move to next waypoint"))
   
-  ShroudConsoleLog("Syntax: \\" .. cmd .. " restart       - 移動を再開")  
-  ShroudConsoleLog("Syntax: \\" .. cmd .. " revert        - 前回のルートに巻き戻す")  
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " restart       - " .. __("help_restart", "Restart navigation from beginning"))  
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " revert        - " .. __("help_revert", "Rollback to previous route"))
+  ShroudConsoleLog("Syntax: \\" .. cmd .. " load [path]   - " .. __("help_load", "Load route from file"))
   
   
   
