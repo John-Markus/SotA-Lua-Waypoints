@@ -15,6 +15,15 @@ WPT.self.parseJson = function(arg)
   return json.parse(arg)
 end
 
+WPT.getSafeMapName = function()
+  local mapname = ShroudGetCurrentSceneName() .. "["
+  mapname = string.match(mapname, "^([^\\[]*)([\\[].*)")
+  mapname = mapname:gsub("^%s+", ""):gsub("%s+$", "")
+  --ConsoleLog("<" .. mapname .. ">")
+  return mapname  
+end
+
+
 WPT.getCount = function()
   return #WPT.self.nodes
 end
@@ -58,7 +67,7 @@ end
 WPT.doSetJson = function (arg)
   WPT.self.current_node = {}
   WPT.self.nodes = {}
-  WPT.self.last_map = ShroudGetCurrentSceneName()
+  WPT.self.last_map = WPT.getSafeMapName()
   
   if WPT.self.last_args != arg then
     WPT.self.last2_args = WPT.self.last_args
@@ -171,7 +180,7 @@ end
 WPT.getWaypointString = function(comment)
   a = {}
   a[1+#a] = string.format("%d,%d,%d", ShroudPlayerX, ShroudPlayerY, ShroudPlayerZ)
-  a[1+#a] = ShroudGetCurrentSceneName()  
+  a[1+#a] = WPT.getSafeMapName()
   a[1+#a] = comment
   table.insert(WPT.self.saved_nodes, a)
   return json.serialize(a)
