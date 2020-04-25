@@ -17,6 +17,15 @@ Following additional commands are available
     \waypoints save                 - Save optimized listing of all marked locations
     \waypoints next                 - Choose next waypoint
     \waypoints stop                 - Stop navigating
+    \waypoints restart              - Restart navigation from beginning
+    \waypoints revert               - Restart from previous route (undo overwrites by others)
+
+### Waypoint set
+\waypoint set can be initiated by following parties:
+* Yourself on any channel
+* Anyone on party channel (configures everyone)
+* Anybody on whisper (affects only the recipient)
+* Any NPCs using Inky
 
 ## How the script works
 
