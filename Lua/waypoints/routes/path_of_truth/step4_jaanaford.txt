@@ -1,0 +1,13 @@
+["-168,12,-51","Novia","arrive at Jaanaford"]
+
+["-73,33,-144","Jaanaford","Enter Jaanaford"]
+
+["-35,33,-23","Jaanaford",""]
+ 
+["-43,36,-15","Jaanaford",""]
+
+["-43,38,-21","Jaanaford","Talk to Innkeeper"]
+
+["-48,38,-26","Jaanaford","Talk to Jenna Karttunen about bonesteel"]
+
+["!path of truth/step5_kiln"]

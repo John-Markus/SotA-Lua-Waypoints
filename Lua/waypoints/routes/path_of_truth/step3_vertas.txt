@@ -1,0 +1,17 @@
+["-333,11,45","Novia","arrive at Vertas"]
+
+["-48,40,-211","Vertas","arrive at vertas entrance"]
+
+["-67,37,-199","Vertas",""]
+["-84,32,-151","Vertas",""]
+["-57,27,-112","Vertas",""]
+
+["-55,29,-76","Vertas","arrive at gate"]
+["-49,29,-68","Vertas","open gate"]
+
+["-68,36,-22","Vertas",""]
+["-96,35,0","Vertas","at Vertas Traveler"]
+
+["-92,35,-5","Vertas","Talk to Kiakis about book and bonesteel"]
+
+["!path of truth/step4_jaanaford"]

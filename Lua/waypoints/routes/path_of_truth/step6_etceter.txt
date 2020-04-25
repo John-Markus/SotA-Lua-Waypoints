@@ -1,0 +1,53 @@
+["-175,12,-264","Novia","arrive at Etceter"]
+
+["-82,30,-157","Etceter","enter Etceter"]
+
+["-19,22,-106","Etceter",""]
+
+["60,23,-82","Etceter",""]
+
+["103,22,-54","Etceter","Talk to Harbormaster"]
+
+["100,23,-45","Etceter","Talk to Harbormaster about passage and something for you"]
+
+["89,23,-37","Etceter","Talk to Lady Ransom"]
+
+["93,23,-35","Etceter","Taslk to Lady Ransom about information and Yes, I do pledge"]
+
+["122,21,-57","Etceter","Exit to Novia"]
+
+-- Navigate Crag Foothills
+
+["-196,16,-276","Novia","Arrive at Crag Foothills"]
+["7,66,103","Crag Foothills","Enter Crag Foothills"]
+
+["58,57,77","Crag Foothills","This is a combat zone"]
+["123,56,85","Crag Foothills","This is a combat zone"]
+["118,56,64","Crag Foothills","This is a combat zone"]
+["123,52,-5","Crag Foothills","This is a combat zone"]
+["135,47,-52","Crag Foothills","This is a combat zone"]
+["160,52,-98","Crag Foothills","This is a combat zone"]
+["122,70,-119","Crag Foothills","This is a combat zone"]
+["82,71,-117","Crag Foothills","This is a combat zone"]
+["49,70,-140","Crag Foothills","This is a combat zone"]
+
+["32,70,-180","Crag Foothills","Arrive at Etceter Crag Mines"]
+["105,-4,104","Etceter Crag Mines","Enter Etceter Crag Mines"]
+
+["81,-9,103","Etceter Crag Mines",""]
+["72,-9,97","Etceter Crag Mines",""]
+["47,-9,95","Etceter Crag Mines",""]
+["32,-9,114","Etceter Crag Mines",""]
+["25,-9,136","Etceter Crag Mines","Talk to Bandit Chief"]
+
+["116,21,-53","Etceter","Use Teleport Zone scroll to Etceter's Pilgrim's Docks"]
+
+-- Back at Etceter
+
+["104,22,-51","Etceter","Talk to Harbormaster"]
+
+["125,21,-29","Etceter","Talk to Ship Captain about passage and travel to Xenos"]
+
+["124,36,54","Xenos","Arrive at Xenos"]
+
+["!path of truth/step7_xenos"]

@@ -1,0 +1,62 @@
+["1,15,2","Halls of Artifice","Enter Halls of Artifice"]
+
+["-64,15,23","Halls of Artifice","The gift of Longing"]
+["0,15,130","Halls of Artifice","The gift of Hunger"]
+["72,15,27","Halls of Artifice","The gift of Envy"]
+
+["0,15,-1","Halls of Artifice","Back at the Gate"]
+
+["-10,15,-48","Halls of Artifice",""]
+["-24,10,-48","Halls of Artifice",""]
+["-24,10,-58","Halls of Artifice",""]
+["-12,10,-72","Halls of Artifice",""]
+["0,5,-72","Halls of Artifice",""]
+["0,5,-81","Halls of Artifice",""]
+["-10,5,-96","Halls of Artifice",""]
+["-23,0,-107","Halls of Artifice",""]
+["-27,0,-119","Halls of Artifice","Be careful here..."]
+["-12,0,-120","Halls of Artifice",""]
+["0,-5,-120","Halls of Artifice","How did you do ?"]
+
+["0,-4,-177","Halls of Artifice","Enter Maze"]
+["0,-4,-183","Halls of Artifice",""]
+["16,-4,-183","Halls of Artifice",""]
+["16,-4,-192","Halls of Artifice",""]
+["24,-4,-191","Halls of Artifice",""]
+["23,-4,-176","Halls of Artifice",""]
+["16,-4,-175","Halls of Artifice",""]
+["15,-4,-168","Halls of Artifice",""]
+["0,-4,-168","Halls of Artifice",""]
+["0,-4,-158","Halls of Artifice",""]
+["7,-4,-151","Halls of Artifice",""]
+["1,-4,-151","Halls of Artifice","End of maze"]
+
+["61,-4,-159","Halls of Artifice","Talk to Notus"]
+["72,-4,-159","Halls of Artifice","Talk to Notus about Boreus"]
+
+["78,-4,-160","Halls of Artifice","Enter Throne Room of the Gods"]
+["107,-4,-159","Halls of Artifice","Meet Boreus"]
+["123,0,-159","Halls of Artifice","Take Bonesteel Crown"]
+["133,0,-159","Halls of Artifice","Arrive at Exit"]
+
+["161,0,-167","Halls of Artifice","Enter the Royal Forge"]
+["194,-10,-166","Halls of Artifice","Talk to Kobold Blacksmith"]
+["202,-9,-168","Halls of Artifice","Talk to Hephaestus about Destiny"]
+
+["229,-15,-167","Halls of Artifice","Arrived at Exit"]
+["283,-14,-167","Halls of Artifice","Enter Library"]
+["318,-19,-167","Halls of Artifice",""]
+["321,-19,-161","Halls of Artifice","Talk to Kiakis"]
+
+["319,-19,-132","Halls of Artifice",""]
+["316,-19,-125","Halls of Artifice","Talk to Curious Faun"]
+["319,-19,-128","Halls of Artifice","Talk to Perri about Homily"]
+["318,-19,-168","Halls of Artifice",""]
+["280,-14,-167","Halls of Artifice","Arrive at Exit"]
+
+["230,-15,-168","Halls of Artifice","Enter the Royal Forge"]
+["206,-10,-167","Halls of Artifice",""]
+["197,-9,-168","Halls of Artifice","Warning: Lava kills !"]
+["197,-9,-168","Halls of Artifice","Talk to Hephaestus about Destiny"]
+
+

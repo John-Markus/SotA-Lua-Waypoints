@@ -1,0 +1,13 @@
+["-470,11,-210","Novia","Enter Aerie"]
+
+["-67,28,-106","Aerie","Arrive at Traveller's Field"]
+
+["11,29,-72","Aerie",""]
+["56,27,-29","Aerie",""]
+["342,29,-165","Aerie",""]
+["383,30,-152","Aerie","Enter blacksmith building"]
+
+["391,30,-150","Aerie","Talk to Kyle Behrand"]
+["386,30,-152","Aerie","Talk to Kyle Behrand about bonesteel, boreas, and vertas"]
+
+["!path of truth/step3_vertas"]

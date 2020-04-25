@@ -1,0 +1,24 @@
+-- Path of Truth Walkthru by JohnMarkus
+["-33,44,55","Blood River Massacre","Enter Blood River Massacre"]
+
+["-59,51,47","","Talk to Robert Villines, answer Yes"]
+
+["-120,57,54","","Talk to Zac about dagger"]
+
+["-117,58,-29","","Find dagger in the building"]
+
+["-117,58,-35","","Pickup dagger"]
+
+["-118,58,-31","","Talk to Robert Villines about dagger"]
+
+["-60,52,2","","Talk to Edvard the Wandered regarding dagger and unlock"]
+
+["-58,52,1","","Unlock Door"]
+
+["58,52,7","","Fight through the bridge"]
+
+["23,43,10","","Find boat at use boat"]
+
+["77,60,127","Blood River Outskirts","arrived at Blood River Outskirts"]
+
+["!path of truth/step2_aerie"]

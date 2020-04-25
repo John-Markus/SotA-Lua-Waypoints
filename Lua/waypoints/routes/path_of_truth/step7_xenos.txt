@@ -1,0 +1,27 @@
+["16,37,47","Xenos",""]
+
+["15,37,33","Xenos",""]
+
+["4,40,33","Xenos","Talk to Elf Official"]
+
+["14,37,31","Xenos","Talk to Chancellor Notus about Waiting"]
+
+["128,36,50","Xenos","Travel to Boat to Novia"]
+
+["-442,19,-310","Novia","Arrive at Artifice"]
+
+["117,12,12","Artifice","Enter Artifice"]
+
+["112,13,-4","Artifice",""]
+["60,19,-55","Artifice",""]
+["82,23,-55","Artifice",""]
+["63,28,-73","Artifice",""]
+["85,32,-73","Artifice",""]
+["40,36,-97","Artifice",""]
+["-19,36,-98","Artifice",""]
+["-46,50,-121","Artifice",""]
+["-42,60,-142","Artifice",""]
+["-1,67,-137","Artifice","at Artifice Gate"]
+["1,15,2","Halls of Artifice","Enter Halls of Artifice"]
+
+["!path of truth/step8_artifice"]
