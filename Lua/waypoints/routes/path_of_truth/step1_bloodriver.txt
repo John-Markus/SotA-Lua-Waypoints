@@ -1,4 +1,5 @@
 -- Path of Truth Walkthru by JohnMarkus
+["-408,12,-95","Novia","Arrive at Blood River Massacre"]
 ["-33,44,55","Blood River Massacre","Enter Blood River Massacre"]
 
 ["-59,51,47","","Talk to Robert Villines, answer Yes"]

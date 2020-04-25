@@ -1,5 +1,4 @@
 -- Path of Truth walkthru by John Markus
 
 -- Go to blood river massacre on Novia
-["-408,12,-95","Novia",""]
-["!path_of_truth/step1_bloodriver"]
+["323,104,-111","Kai","Meet the Path of Truth Guide at Kai Island"]
