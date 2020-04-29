@@ -10,7 +10,7 @@
 
 ["-117,58,-29","","Find dagger in the building"]
 
-["-117,58,-35","","Pickup dagger"]
+["-118,58,-35","","Pickup dagger"]
 
 ["-118,58,-31","","Talk to Robert Villines about dagger"]
 

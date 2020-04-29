@@ -7,20 +7,28 @@ local WPT = {
     last_map,    
     saved_nodes = {},
   },
+  last_comment = "",
   target = {x, y, z, map, comment},
-  module_paths = "\\waypoints\\routes\\",
+  last_target = {x, y, z, map, comment},
+  next_distance = 100,
+  module_paths = "\\waypoints\\routes\\",  
 }
 
 WPT.self.parseJson = function(arg)
   return json.parse(arg)
 end
 
-WPT.getSafeMapName = function()
-  local mapname = ShroudGetCurrentSceneName() .. "["
+
+WPT.sanitizeMapName = function(mapname)
+  if mapname == nil then return "" end
+  mapname = mapname .. "["
   mapname = string.match(mapname, "^([^\\[]*)([\\[].*)")
   mapname = mapname:gsub("^%s+", ""):gsub("%s+$", "")
-  --ConsoleLog("<" .. mapname .. ">")
   return mapname  
+end
+
+WPT.getSafeMapName = function()
+  return WPT.sanitizeMapName(ShroudGetCurrentSceneName())
 end
 
 
@@ -68,6 +76,8 @@ WPT.doSetJson = function (arg)
   WPT.self.current_node = {}
   WPT.self.nodes = {}
   WPT.self.last_map = WPT.getSafeMapName()
+  WPT.next_distance = 0
+  WPT.last_comment = ""
   
   if WPT.self.last_args != arg then
     WPT.self.last2_args = WPT.self.last_args
@@ -99,7 +109,12 @@ WPT.doSetJson = function (arg)
   end
 end
 
+
+
+
 WPT.doLoad = function(filename)
+  ConsoleLog(string.format("WAYPOINTS: To REUSE: \\waypoints load %s", filename))
+  
   filename = filename:gsub(" ", "_")
   local path = ShroudLuaPath .. WPT.module_paths .. filename .. ".txt"
   path = path:gsub("\\", "/")
@@ -142,6 +157,7 @@ WPT.doNext = function()
   WPT.self.current_node = table.remove(WPT.self.nodes, 1)
   
   -- parse it
+  WPT.last_comment = WPT.target.comment
   WPT.target.map = WPT.self.last_map
   WPT.target.comment = ""
   
@@ -153,12 +169,29 @@ WPT.doNext = function()
     end
   end
   
+  WPT.last_target.x = WPT.target.x
+  WPT.last_target.y = WPT.target.y
+  WPT.last_target.z = WPT.target.z
+  WPT.last_target.map = WPT.target.map
+  WPT.last_target.comment = WPT.target.comment
+  
   WPT.target.x, WPT.target.y, WPT.target.z = string.match(WPT.self.current_node[1], "^(-?[0-9.]+),(-?[0-9.]+),(-?[0-9.]+)$")
   if #WPT.self.current_node >= 2 then WPT.target.map = WPT.self.current_node[2] end
   if #WPT.self.current_node >= 3 then WPT.target.comment = WPT.self.current_node[3] end
   
   if WPT.target.map != "" then
+    WPT.target.map = WPT.sanitizeMapName(WPT.target.map)
     WPT.self.last_map = WPT.target.map
+  end
+  
+  WPT.next_distance = 100
+  -- Try to find distance to next node so that we can autoscale arrival radius
+  if WPT.last_target.z != nil then
+      WPT.next_distance = math.sqrt(math.pow(WPT.target.x - WPT.last_target.x, 2) +
+                                    math.pow(WPT.target.y - WPT.last_target.y, 2) +
+                                    math.pow(WPT.target.z - WPT.last_target.z, 2))
+      ConsoleLog('next distance: ' .. WPT.next_distance)
+    
   end
   
   return true

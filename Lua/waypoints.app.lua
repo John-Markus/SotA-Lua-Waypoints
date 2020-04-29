@@ -17,9 +17,19 @@ function __(ident, msg)
   return msg
 end
 
+function minmax(a, b, c) 
+  if a < b then a = b end
+  if a > c then a = c end
+  return a
+end
+
 
 waypoints = {
-  VERSION = "1.0.1",
+  VERSION = "1.0.2",
+  CONFIG = { arrival_max = 5, -- maximum 3d distance for arrival
+             arrival_min = 2, -- minimum 3d distance for arrival
+             arrival_vdist = 2, -- maximum vertical distance for arrival
+           },
   ui_initialized = 0,
   enabled = 0,
   visible = 1,
@@ -44,6 +54,8 @@ localizations = {
   msg_distance_short = "目的地まで %0.1f",
   msg_next_node_found_long = "次の目的地を設定しました。 %s",
   msg_next_location_long = "次の目的地： %s",
+  msg_next_objective_long = "次: %s",
+  msg_last_objective_long = "前: %s",
   msg_arrived_long = "目的地に到着しました。",
   msg_command_stop = "目的地のガイドを中断しました。",  
   msg_no_comment = "周辺に注意して移動しましょう。",
@@ -54,8 +66,6 @@ localizations = {
   button_stop = "中断",
   button_close = "閉じる",
 }
-
-
 
 function doRequire(filename)
     local _modulesPath = ShroudLuaPath .. modulesPath
@@ -137,7 +147,6 @@ function doNavigate()
     return
   end
   
-  
   local angle, distance, hdiff
   local hdist, vdist
   local mx, my, mouseOver = 0
@@ -145,7 +154,6 @@ function doNavigate()
   if comment == "" then
     comment = __("msg_no_comment", "Please move along")
   end
-  
   
   mx = ShroudMouseX
   my = ShroudMouseY
@@ -173,7 +181,6 @@ function doNavigate()
   hdist = math.sqrt(math.pow(lib_waypoints.target.x - ShroudPlayerX, 2) + math.pow(lib_waypoints.target.z - ShroudPlayerZ, 2))
   vdist = math.abs(lib_waypoints.target.y - ShroudPlayerY)
   
-  
   if not ShroudIsCharacterSheetActive() then
     if distance > 20 then
       drawAngleText(angle, 2, "x")
@@ -184,8 +191,13 @@ function doNavigate()
   
   showMainUIStatus(string.format(__("msg_distance_short", "Distance: %0.1f"), distance))
   
-  if distance < 3 then
-    doNext()
+  local distance_limit
+  distance_limit = math.max(1, waypoints.CONFIG.arrival_min, math.min(10, waypoints.CONFIG.arrival_max, lib_waypoints.next_distance / 2 - 1))
+  
+  if distance < distance_limit then
+    if vdist < math.max(1, waypoints.CONFIG.arrival_vdist) then
+      doNext()
+    end
   end
   
   hdiff = lib_waypoints.target.y- ShroudPlayerY
@@ -202,7 +214,7 @@ function doNavigate()
     end
     
     if mouseOver == 1 then
-      showAlert(string.format(__("msg_next_location_long", "Next waypoint. %s"), comment), 2)    
+      showAlert(string.format(__("msg_next_objective_long", "Next Objective: %s"), comment), 2)    
     end
   end
   
@@ -226,16 +238,14 @@ function doNavigate()
     end
   end
   
-  
+  -- Do a Constant Angular Velocity on arrow rotation
   waypoints.arrow_angle = ui_bearings.CAVRotate(waypoints.arrow_angle, angle_diff, 180 * waypoints.gui_time.s)
   
   ax = (client_width  / 2) + math.sin(waypoints.arrow_angle / 180 * math.pi) * scale
   ay = (client_height / 2) - math.cos(waypoints.arrow_angle / 180 * math.pi) * scale
   
-  if ax < waypoints.arrow_box.left   then ax = waypoints.arrow_box.left end
-  if ay < waypoints.arrow_box.top    then ay = waypoints.arrow_box.top  end
-  if ax > waypoints.arrow_box.right  then ax = waypoints.arrow_box.right end
-  if ay > waypoints.arrow_box.bottom then ay = waypoints.arrow_box.bottom end
+  ax = minmax(ax, waypoints.arrow_box.left, waypoints.arrow_box.right)
+  ay = minmax(ay, waypoints.arrow_box.top, waypoints.arrow_box.bottom)
   
   --ConsoleLog(ax .. "," .. ay)
   
@@ -253,7 +263,10 @@ function doNavigate()
   
   
   ShroudDrawTexture(ax -waypoints.arrow_size / 2, ay -waypoints.arrow_size / 2, waypoints.arrow_size, waypoints.arrow_size, waypoints.textures.arrows[imgidx + 1], StretchToFill)
-  ShroudGUILabel(ax - waypoints.arrow_size / 2, ay + waypoints.arrow_size / 2, 40, 20, string.format("%0.1f", distance))
+  
+  -- center text
+  local text = string.format("%0.1f (%0.1f)", distance, distance_limit)
+  ShroudGUILabel(ax - #text * 3, ay + waypoints.arrow_size / 2, #text * 7, 40, text)
   
 end
 
@@ -276,9 +289,18 @@ function ShroudOnGUI()
   local client_height = ShroudGetScreenY()
   
   if waypoints.alerts.timeout > os.time() then
-    ShroudDrawTexture(client_width / 2 - 300, client_height / 2 - 120, 600, 40, waypoints.textures.alert, StretchToFill)
-    ShroudGUILabel(client_width / 2 - 300 + 3, client_height / 2 - 120 - 2, 600, 20, "<color=#000000FF>WAYPOINTS.lua</color>")    
-    ShroudGUILabel(client_width / 2 - 300 + 3, client_height / 2 - 120 + 16, 600, 24, "<size=16>" .. waypoints.alerts.msg .. "</size>")
+    local tx = client_width / 2 - 300
+    local ty = waypoints.window.top
+    ShroudDrawTexture(tx, ty, 600, 40, waypoints.textures.alert, StretchToFill)
+    ShroudGUILabel(tx + 3, ty - 2, 600, 20, "<color=#000000FF>WAYPOINTS.lua</color>")    
+    ShroudGUILabel(tx + 3, ty + 16, 600, 24, "<size=16>" .. waypoints.alerts.msg .. "</size>")
+    
+    if lib_waypoints.last_comment != nil then
+      ShroudDrawTexture(tx, ty + 40, 600, 40, waypoints.textures.alert, StretchToFill)
+      
+      ShroudGUILabel(tx + 3, ty + 40 + 16, 600, 24, "<size=16>" .. string.format(__("msg_last_objective_long", "Last Objective: %s"), lib_waypoints.last_comment) .. "</size>")
+    end    
+    
   end
   
   if waypoints.visible == 0 then
@@ -308,10 +330,13 @@ function ShroudOnGUI()
   waypoints.arrow_box.bottom = client_height - waypoints.arrow_box.top
   
   
-  if waypoints.textures.backdrop > 0 then
-    ShroudDrawTexture(waypoints.window_box.left, waypoints.window_box.top, waypoints.window.width, waypoints.window.height, waypoints.textures.backdrop, StretchToFill)
+  if waypoints.textures.backdrop != nil then
+    if waypoints.textures.backdrop > 0 then
+      ShroudDrawTexture(waypoints.window_box.left, waypoints.window_box.top, waypoints.window.width, waypoints.window.height, waypoints.textures.backdrop, StretchToFill)
+    end
   end
   
+    
   if not ShroudIsCharacterSheetActive() then  
     if waypoints.textures.button > 0 then
       if ShroudButton(waypoints.window_box.left + 130, waypoints.window_box.top + 16 + 24 * 0, 64, 21, waypoints.textures.button, __("button_next", "Next"), "") then
@@ -477,8 +502,6 @@ function dispatchCommand(channel, sender, cmd, arg)
       lib_waypoints.doSetLast(route)
       return    
     end
-
-  
   
   -- set waypoints
   if string.sub(arg, 1, 4) == "set " then
@@ -498,8 +521,6 @@ function dispatchCommand(channel, sender, cmd, arg)
       return
     end
   end
-  
-  
    
   if valid_arg == 1 then return end
   if as_self == 0 then return end
@@ -512,8 +533,6 @@ function dispatchCommand(channel, sender, cmd, arg)
   ShroudConsoleLog("Syntax: \\" .. cmd .. " restart       - " .. __("help_restart", "Restart navigation from beginning"))  
   ShroudConsoleLog("Syntax: \\" .. cmd .. " revert        - " .. __("help_revert", "Rollback to previous route"))
   ShroudConsoleLog("Syntax: \\" .. cmd .. " load [path]   - " .. __("help_load", "Load route from file"))
-  
-  
   
 end
 
