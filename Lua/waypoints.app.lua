@@ -1,6 +1,12 @@
 -- waypoints.app by John Markus
 -- uses screen bearings to navigate players
 
+local ScriptName = "Waypoints";
+local Version = "1.0.3";
+local CreatorName = "John Markus";
+local Description = "Provides on screen navigation to predefined sets of waypoints. See !waypoints help";
+local IconPath = "waypoints\\images\\arrow-14.png";
+
 
 local modulesPath = "\\waypoints\\modules\\"
 local ui_bearings = false
@@ -25,7 +31,7 @@ end
 
 
 waypoints = {
-  VERSION = "1.0.2",
+  VERSION = Version,
   CONFIG = { arrival_max = 5, -- maximum 3d distance for arrival
              arrival_min = 2, -- minimum 3d distance for arrival
              arrival_vdist = 2, -- maximum vertical distance for arrival
@@ -296,9 +302,11 @@ function ShroudOnGUI()
     ShroudGUILabel(tx + 3, ty + 16, 600, 24, "<size=16>" .. waypoints.alerts.msg .. "</size>")
     
     if lib_waypoints.last_comment != nil then
-      ShroudDrawTexture(tx, ty + 40, 600, 40, waypoints.textures.alert, StretchToFill)
+      if lib_waypoints.last_comment != "" then
+        ShroudDrawTexture(tx, ty + 45, 600, 40, waypoints.textures.alert, StretchToFill)
       
-      ShroudGUILabel(tx + 3, ty + 40 + 16, 600, 24, "<size=16>" .. string.format(__("msg_last_objective_long", "Last Objective: %s"), lib_waypoints.last_comment) .. "</size>")
+        ShroudGUILabel(tx + 3, ty + 45 + 16, 600, 24, "<size=16>" .. string.format(__("msg_last_objective_long", "Last Objective: %s"), lib_waypoints.last_comment) .. "</size>")
+      end
     end    
     
   end
@@ -398,6 +406,12 @@ function ShroudOnConsoleInput(channel, sender, message)
     if cmd == "waypoints" then dispatchCommand(channel, sender, cmd, arg) end
     if cmd == "waypoint"  then dispatchCommand(channel, sender, cmd, arg) end
   end
+  if string.byte(msg) == 33 then
+    local cmd, arg = string.match(msg, "^!(%w+)%s*(.*)$")
+    if cmd == "waypoints" then dispatchCommand(channel, sender, cmd, arg) end
+    if cmd == "waypoint"  then dispatchCommand(channel, sender, cmd, arg) end
+  end
+  
 end
 
 function doNext()

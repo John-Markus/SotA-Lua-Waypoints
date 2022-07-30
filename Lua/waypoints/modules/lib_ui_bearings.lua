@@ -1,3 +1,5 @@
+-- Calculate bearing (direction) the UI is facing based on movement data
+
 local UIB = { }
 
 UIB.focus_speed = 360.0
@@ -10,6 +12,7 @@ UIB.self = {
   last_frame = 0,  
 }
 
+-- Perform sanity check to see if data is usable
 UIB.self.doSanity = function()
   local is_sane = true
   
@@ -81,36 +84,17 @@ UIB.self.doCalculateAngles = function()
   
   if not UIB.self.doSanity() then return end
   
-  UIB.self.this_loc.x = ShroudPlayerX
-  UIB.self.this_loc.y = ShroudPlayerY
-  UIB.self.this_loc.z = ShroudPlayerZ
-  UIB.self.this_loc.t = os.time()
-  
-  -- check if we have moved
-  if (UIB.self.this_loc.x == UIB.self.last_loc.x) and (UIB.self.this_loc.z == UIB.self.last_loc.z) then
+  UIB.bearing = UIB.fit360(ShroudGetPlayerOrientation())
     return UIB.bearing
   end
   
-  angle = math.atan2(UIB.self.this_loc.x - UIB.self.last_loc.x, UIB.self.this_loc.z - UIB.self.last_loc.z)
-  angle = (angle / math.pi * 180) - UIB.self.hints.d
-  angle = UIB.fit360(angle)
-  
-  UIB.bearing = angle
-  
-  UIB.self.last_loc.x = UIB.self.this_loc.x
-  UIB.self.last_loc.y = UIB.self.this_loc.y
-  UIB.self.last_loc.z = UIB.self.this_loc.z
-  UIB.self.last_loc.t = UIB.self.this_loc.t
-  
-  return angle  
-end
-
 -- This should be run on ShroudOnUpdate()
 UIB.doDetectBearings = function()
   UIB.self.doDetectMovementHints()
   UIB.self.doCalculateAngles()  
 end
 
+-- Contain angle values to between 0 and 359.99999 degrees
 UIB.fit360 = function(angle)
   while angle < 0 do
     angle = angle + 360
@@ -122,7 +106,7 @@ UIB.fit360 = function(angle)
 
 end
 
-
+-- Smoothen detected bearing using Constand Angular Velocity
 UIB.CAVRotate = function(angle_from, angle_to, focus_speed)
   angle_from = UIB.fit360(angle_from)
   angle_to = UIB.fit360(angle_to)

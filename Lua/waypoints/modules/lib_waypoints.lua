@@ -1,3 +1,5 @@
+-- Decode and process waypoints listed in space-saving formats
+
 local WPT = { 
   self = {
     nodes = {},
